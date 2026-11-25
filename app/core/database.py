@@ -12,14 +12,23 @@ from typing import Annotated
 from fastapi import Depends
 from sqlmodel import Session, SQLModel, create_engine
 
+import os
 from .config import config
 
 logger = logging.getLogger(__name__)
 
-# The Engine is the 'source' of connectivity.
-# echo=True logs all generated SQL statements to the terminal—great for debugging!
+# Soporta DATABASE_URL directa de proveedores como Render, Neon o Supabase
+db_url_env = os.getenv("DATABASE_URL")
+if db_url_env:
+    # Render y algunos proveedores usan postgres:// que SQLAlchemy 1.4+ depreca a favor de postgresql://
+    if db_url_env.startswith("postgres://"):
+        db_url_env = db_url_env.replace("postgres://", "postgresql://", 1)
+    db_connection_str = db_url_env
+else:
+    db_connection_str = f"postgresql://{config.db_username}:{config.db_password}@{config.db_host}:{config.db_port}/{config.db_name}"
+
 engine = create_engine(
-    f"postgresql://{config.db_username}:{config.db_password}@{config.db_host}:{config.db_port}/{config.db_name}",
+    db_connection_str,
     echo=config.debug,
     connect_args={"sslmode": "prefer"},
 )

@@ -40,25 +40,17 @@ class ProductVariantBase(SQLModel):
     )
 
 
-class ProductVariant(ProductVariantBase, table=True):
+class ProductVariant(ProductVariantBase):
     """
-    The Database Table Model for Product Variants.
-
-    This class represents the specific variants of a product (e.g., different sizes and colors) in the database.
+    Schema representing legacy variant attributes (table mapping disabled).
     """
-
     id: UUID = Field(
         default_factory=uuid4,
         primary_key=True,
         description="UUID primary key.",
     )
     product_id: UUID = Field(
-        sa_column=Column(
-            PGUUID(as_uuid=True),
-            ForeignKey("product.id", ondelete="CASCADE"),
-            nullable=False,
-        ),
-        description="UUID foreign key linking to the parent product.",
+        description="UUID reference to product.",
     )
 
 

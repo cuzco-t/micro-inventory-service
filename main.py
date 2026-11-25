@@ -22,12 +22,9 @@ from app.core.errors import (
 )
 from app.middleware import security_headers_middleware
 from app.routers import (
-    analytics_router,
     health_router,
     home_router,
     inventory_router,
-    products_router,
-    variants_router,
 )
 
 logger = logging.getLogger(__name__)
@@ -75,9 +72,6 @@ app.middleware("http")(security_headers_middleware)
 app.include_router(health_router)
 app.include_router(home_router)
 app.include_router(inventory_router)
-app.include_router(analytics_router)
-app.include_router(products_router)
-app.include_router(variants_router)
 
 app.add_exception_handler(AppException, app_exception_handler)
 app.add_exception_handler(Exception, generic_exception_handler)

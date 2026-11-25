@@ -108,17 +108,11 @@ class ProductBase(SQLModel):
     )
 
 
-class Product(ProductBase, table=True):
+class Product(ProductBase):
     """
-    The Database Table Model.
-
-    Setting 'table=True' tells SQLModel to map this class to a
-    PostgreSQL table. This represents the 'Source of Truth' in the DB.
+    Schema representing legacy product attributes (table mapping disabled
+    to prevent conflict with catalog service).
     """
-
-    # This class serves a dual purpose:
-    # 1. Pydantic Model (API Validation)
-    # 2. SQLAlchemy Model (Database Table Mapping)
     id: UUID = Field(
         default_factory=uuid4,
         primary_key=True,
@@ -127,7 +121,6 @@ class Product(ProductBase, table=True):
     sku: str = Field(
         max_length=7,
         description="Auto-generated SKU based on category prefix and sequential number (e.g. TS-0001).",
-        unique=True,
     )
 
 
